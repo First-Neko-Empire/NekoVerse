@@ -30,13 +30,6 @@ namespace VRMShaders
         public bool IsUnderAsset => IsDescendantOf(UnityAssets);
 
         public bool Exists => System.IO.File.Exists(FullPath);
-
-        /// <summary>
-        /// AssetDatabase の引き数になるパスを想定。
-        /// Assets のひとつ上を 基準とする相対パス。
-        /// Application.dataPath は Assets を得る。
-        /// </summary>
-        /// <returns></returns>
         public string UnityAssetPath
         {
             get
@@ -50,16 +43,13 @@ namespace VRMShaders
             }
         }
 
-        static PathObject? _root;
+        static PathObject _root;
         public static PathObject UnityRoot
         {
             get
             {
-                if (!_root.HasValue)
-                {
                     _root = FromFullPath(Path.GetDirectoryName(Application.dataPath));
-                }
-                return _root.Value;
+                return _root;
             }
         }
 
