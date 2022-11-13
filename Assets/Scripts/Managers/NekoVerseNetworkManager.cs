@@ -14,36 +14,60 @@ public class NekoVerseNetworkManager : NetworkManager
     GameObject defaultPlayerPrefab;
     [SerializeField]
     Button btn_connect;
+    [SerializeField]
+    GameObject btn_change;
+    [SerializeField]
+    Image img_localHost;
+    [SerializeField]
+    Image img_server;
 
 
     bool shouldStartHost = false;
 
 
-    private enum SERVER_SELECTION
-    {
-        NONE, LOCAL_HOST, SERVER1, SERVER2
-    }
 
-    SERVER_SELECTION currentSelection;
 
     private new void Start()
     {
         base.Start();
-        currentSelection = SERVER_SELECTION.NONE;
 
     }
     public void HostAndPlay()
     {
+        btn_change.SetActive(true);
+
+
         shouldStartHost = true;
         CanvasManager.Instance.OnConnectButtonPressed();
+
         CanvasManager.Instance.ShowYouAreHost();
+
         CanvasManager.Instance.ShowHostInfo();
-        GameManager.Instance.SetNickname(LoadUserNicknameFromPrefs());
+
+        string nickname = LoadUserNicknameFromPrefs();
+        GameManager.Instance.SetNickname(nickname);
+
     }
+    public void OnServerOneButtonPressed()
+    {
+        Color oldLH = img_localHost.color;
+        Color oldServ = img_server.color;
+        img_localHost.color = new Color(oldLH.r, oldLH.g, oldLH.b, 0.25f);
+        img_server.color = new Color(oldServ.r, oldServ.g, oldServ.b, 1);
+        networkAddress = "";
+        GetComponent<kcp2k.KcpTransport>().Port = 0;
+    }
+
     public void OnLocalHostButtonPressed()
     {
-        currentSelection = SERVER_SELECTION.LOCAL_HOST;
+        Color oldLH = img_localHost.color;
+        Color oldServ = img_server.color;
+        img_localHost.color = new Color(oldLH.r, oldLH.g, oldLH.b, 1);
+        img_server.color = new Color(oldServ.r, oldServ.g, oldServ.b, 0.25f);
+        networkAddress = "127.0.0.1";
+        GetComponent<kcp2k.KcpTransport>().Port = 7777;
         btn_connect.interactable = true;
+
     }
     public void SetPlayerPrefab(GameObject prefab)
     {
@@ -76,6 +100,12 @@ public class NekoVerseNetworkManager : NetworkManager
         StopClient();
     }
 
+    public void OnServerInfoChanged(string address, ushort port)
+    {
+        networkAddress = address;   
+        GetComponent<kcp2k.KcpTransport>().Port = port;
+    }
+
 
     public void SaveUserNicknameToPrefs(string nickname)
     {
@@ -85,19 +115,11 @@ public class NekoVerseNetworkManager : NetworkManager
     {
         if (PlayerPrefs.HasKey("NICKNAME"))
             return PlayerPrefs.GetString("NICKNAME");
-        return "";
+        return "DefaultNickname";
     }
-    public async void OnPlayButtonPressed()
+    public void OnPlayButtonPressed()
     {
-        try
-        {
             SaveUserNicknameToPrefs(GameManager.Instance.GetNickname());
-            print(" dont do this.");
-            //this is so fucking bad ,but it works for now
-            if (currentSelection == SERVER_SELECTION.NONE)
-            {
-                currentSelection = SERVER_SELECTION.LOCAL_HOST;
-            }
             //This shouldnt be here, all characters should already be ready
             if (playerPrefab == null)
             {
@@ -110,51 +132,7 @@ public class NekoVerseNetworkManager : NetworkManager
                 StartHost();
                 return;
             }
-
-
-            switch (currentSelection)
-            {
-                case SERVER_SELECTION.NONE:
-                    break;
-                case SERVER_SELECTION.LOCAL_HOST:
-                    StartClient();
-                    break;
-                case SERVER_SELECTION.SERVER1:
-                    break;
-                case SERVER_SELECTION.SERVER2:
-                    break;
-                default:
-                    break;
-            }
-        }
-        catch (Exception e)
-        {
-            try
-            {
-                File.WriteAllLines("C:\\Users\\Nikola\\Desktop\\lines.txt", new string[] { e.Message, e.ToString()});
-
-                ApplicationManager.Instance.print(e.Message);
-                ApplicationManager.Instance.print("\n\n");
-                ApplicationManager.Instance.print(e.ToString());
-                ApplicationManager.Instance.print("\n\n");
-                //ApplicationManager.Instance.print(e.InnerException.ToString());
-                //ApplicationManager.Instance.print("\n\n");
-                //ApplicationManager.Instance.print(e.StackTrace.ToString());
-                //ApplicationManager.Instance.print("\n\n");
-                //ApplicationManager.Instance.print(e.Data.ToString());
-                //ApplicationManager.Instance.print("\n\n");
-                //ApplicationManager.Instance.print(e.Source.ToString());
-                File.WriteAllLines("lines.txt", new string[] { "hello","how are you" });
-
-
-            }
-            catch (Exception ee)
-            {
-                ApplicationManager.Instance.print(ee.ToString());
-            }
-        }
-
-
+        StartClient();
     }
 
 

@@ -12,6 +12,14 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
     Button btn_play;
     [SerializeField]
     TMP_InputField if_nickname;
+    [SerializeField]
+    GameObject serverInfoChage;
+    [SerializeField]
+    TMP_InputField if_address;
+    [SerializeField]
+    TMP_InputField if_port;
+
+
 
     int currentSelectedCharacterId = -1;
 
@@ -20,6 +28,18 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
     private void Start()
     {
         btn_play.interactable = false;
+    }
+
+    public void OnChangeServerInfoButtonPressed()
+    {
+        serverInfoChage.SetActive(true);
+    }
+
+    public void OnGoButtonPressed()
+    {
+        serverInfoChage.SetActive(false);
+        networkManager.OnServerInfoChanged(if_address.text, ushort.Parse(if_port.text));
+        CanvasManager.Instance.ShowHostInfo();
     }
 
     private void Update()

@@ -40,6 +40,7 @@ public class CanvasManager : Singleton<CanvasManager>
     [SerializeField]
     private NekoVerseNetworkManager verseNetworkManager;
 
+
     public void PopulateHostInfo()
     {
         txt_hostInfo.GetComponent<TextMeshProUGUI>().text = "Address: \n" + verseNetworkManager.GetAddress() + "\n\n Port: \n"+verseNetworkManager.GetPort();
@@ -62,9 +63,7 @@ public class CanvasManager : Singleton<CanvasManager>
         txt_YouAreHost.SetActive(false);
     }
 
-    private void Start()
-    {
-    }
+
     public void ShowCharSelection()
     {
         panel_charSelection.SetActive(true);

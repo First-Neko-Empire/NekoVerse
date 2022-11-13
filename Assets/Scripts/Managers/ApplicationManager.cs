@@ -11,7 +11,8 @@ public class ApplicationManager : Singleton<ApplicationManager>
     Image img;
     [SerializeField]
     TextMeshProUGUI txt;
-    
+    [SerializeField]
+    GameObject gameManager;
 
     private bool hasUserLogedIn;
 
@@ -23,6 +24,7 @@ public class ApplicationManager : Singleton<ApplicationManager>
 
     private new void Awake()
     {
+        gameManager.SetActive(true);
         base.Awake();
         NekoCharacterNames.Initialize();
     }

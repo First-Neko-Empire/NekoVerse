@@ -4,11 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 public class GameManager : NetworkBehaviourSingleton<GameManager>
 {
-
     [SerializeField]
     TMP_InputField if_nickname;
 
@@ -20,12 +18,11 @@ public class GameManager : NetworkBehaviourSingleton<GameManager>
         private set { playerNickname = value; }
     }
 
-
-    private new void Awake()
+    private void Start()
     {
-        base.Awake();
         DontDestroyOnLoad(gameObject);
     }
+
     private struct PlayerData
     {
         public string Nickname { get; set; }
