@@ -21,17 +21,14 @@ public class NekoVerseNetworkManager : NetworkManager
     [SerializeField]
     Image img_server;
 
-
-    bool shouldStartHost = false;
-
-
-
+    private bool shouldStartHost = false;
 
     private new void Start()
     {
         base.Start();
 
     }
+
     public void HostAndPlay()
     {
         btn_change.SetActive(true);
@@ -106,17 +103,18 @@ public class NekoVerseNetworkManager : NetworkManager
         GetComponent<kcp2k.KcpTransport>().Port = port;
     }
 
-
     public void SaveUserNicknameToPrefs(string nickname)
     {
         PlayerPrefs.SetString("NICKNAME", nickname);
     }
+
     public string LoadUserNicknameFromPrefs()
     {
         if (PlayerPrefs.HasKey("NICKNAME"))
             return PlayerPrefs.GetString("NICKNAME");
         return "DefaultNickname";
     }
+
     public void OnPlayButtonPressed()
     {
             SaveUserNicknameToPrefs(GameManager.Instance.GetNickname());
@@ -140,9 +138,16 @@ public class NekoVerseNetworkManager : NetworkManager
     {
         Transform startPos = GetStartPosition();
         GameObject pickedCharacterPrefab = spawnPrefabs[((int)Characters.Kuro)];
-        GameObject player = startPos != null
-            ? Instantiate(pickedCharacterPrefab, startPos.position, startPos.rotation)
-            : Instantiate(pickedCharacterPrefab);
+        GameObject player;
+        if (startPos != null)
+        {
+            player = Instantiate(pickedCharacterPrefab, startPos.position, startPos.rotation);
+        }
+        else
+        {
+            Debug.LogError("Network starting position in the World is not found.");
+            return;
+        }
 
         // instantiating a "Player" prefab gives it the name "Player(clone)"
         // => appending the connectionId is WAY more useful for debugging!
@@ -152,24 +157,34 @@ public class NekoVerseNetworkManager : NetworkManager
 
     public override void OnClientConnect()
     {
-        // OnClientConnect by default calls AddPlayer but it should not do
-        // that when we have online/offline scenes. so we need the
-        // clientLoadedScene flag to prevent it.
-        if (!clientLoadedScene)
+        //if (!clientLoadedScene)
+        //{
+        //    // Ready/AddPlayer is usually triggered by a scene load completing.
+        //    // if no scene was loaded, then Ready/AddPlayer it here instead.
+        //    if (!NetworkClient.ready)
+        //    {
+        //        NetworkClient.Ready();
+        //    }
+
+        //    Debug.Log($"Client connected on scene: {networkSceneName}");
+
+        //    if (autoCreatePlayer || networkSceneName == "Assets/Scenes/GameWorld.unity")
+        //    {
+        //        NetworkClient.AddPlayer();
+        //    }
+        //}
+
+        // Ready / AddPlayer is usually triggered by a scene load completing.
+        // if no scene was loaded, then Ready/AddPlayer it here instead.
+        if (!NetworkClient.ready)
         {
-            // Ready/AddPlayer is usually triggered by a scene load completing.
-            // if no scene was loaded, then Ready/AddPlayer it here instead.
-            if (!NetworkClient.ready)
-            {
-                NetworkClient.Ready();
-            }
+            NetworkClient.Ready();
+        }
+        Debug.Log($"Client connected on scene: {networkSceneName}");
 
-            Debug.Log($"Client connected on scene: {networkSceneName}");
-
-            if (autoCreatePlayer || networkSceneName == "Assets/Scenes/GameWorld.unity")
-            {
-                NetworkClient.AddPlayer();
-            }
+        if (autoCreatePlayer || networkSceneName == "Assets/Scenes/GameWorld.unity")
+        {
+            NetworkClient.AddPlayer();
         }
         GameManager.Instance.CmdClientConnectedToServer(NetworkClient.connection.connectionId, GameManager.Instance.PlayerNickname);
     }

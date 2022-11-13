@@ -30,13 +30,13 @@ public class GameManager : NetworkBehaviourSingleton<GameManager>
 
     private readonly SyncDictionary<int, PlayerData> clientData = new SyncDictionary<int, PlayerData>();
 
-    [Command]
+    [Command (requiresAuthority = false)]
     public void CmdClientConnectedToServer(int connId,string nickname)
     {
         clientData[connId] = new PlayerData() { Nickname = nickname };
 
     }
-    [Command]
+    [Command (requiresAuthority = false)]
     public void CmdClientDisconnectedFromServer(int connId)
     {
         clientData.Remove(connId);
