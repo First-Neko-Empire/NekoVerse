@@ -55,7 +55,7 @@ public class ApplicationManager : Singleton<ApplicationManager>
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            QuitGame();
+            //QuitGame();
         }
     }
 

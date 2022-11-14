@@ -21,7 +21,9 @@ public class NekoVerseNetworkManager : NetworkManager
     [SerializeField]
     Image img_server;
 
-    private bool shouldStartHost = false;
+    public bool shouldStartHost = false;
+
+    public Characters CurrentlySelectedCharacter = Characters.NullCharacter;
 
     private new void Start()
     {
@@ -133,11 +135,17 @@ public class NekoVerseNetworkManager : NetworkManager
         StartClient();
     }
 
-
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
+        if (CurrentlySelectedCharacter == Characters.NullCharacter)
+        {
+            Debug.LogError("No character is chosen.");
+            return;
+        }
+
+        GameObject pickedCharacterPrefab = spawnPrefabs[(int)CurrentlySelectedCharacter];
+
         Transform startPos = GetStartPosition();
-        GameObject pickedCharacterPrefab = spawnPrefabs[((int)Characters.Kuro)];
         GameObject player;
         if (startPos != null)
         {
@@ -151,31 +159,12 @@ public class NekoVerseNetworkManager : NetworkManager
 
         // instantiating a "Player" prefab gives it the name "Player(clone)"
         // => appending the connectionId is WAY more useful for debugging!
-        player.name = $"{playerPrefab.name} [connId={conn.connectionId}]";
+        player.name = $"{player.name} [connId={conn.connectionId}]";
         NetworkServer.AddPlayerForConnection(conn, player);
     }
 
     public override void OnClientConnect()
     {
-        //if (!clientLoadedScene)
-        //{
-        //    // Ready/AddPlayer is usually triggered by a scene load completing.
-        //    // if no scene was loaded, then Ready/AddPlayer it here instead.
-        //    if (!NetworkClient.ready)
-        //    {
-        //        NetworkClient.Ready();
-        //    }
-
-        //    Debug.Log($"Client connected on scene: {networkSceneName}");
-
-        //    if (autoCreatePlayer || networkSceneName == "Assets/Scenes/GameWorld.unity")
-        //    {
-        //        NetworkClient.AddPlayer();
-        //    }
-        //}
-
-        // Ready / AddPlayer is usually triggered by a scene load completing.
-        // if no scene was loaded, then Ready/AddPlayer it here instead.
         if (!NetworkClient.ready)
         {
             NetworkClient.Ready();

@@ -19,9 +19,7 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
     [SerializeField]
     TMP_InputField if_port;
 
-
-
-    int currentSelectedCharacterId = -1;
+    private Characters currentlySelectedCharacter = Characters.NullCharacter;
 
     private List<CharacterSlot> selectionSlots = new List<CharacterSlot>();
 
@@ -42,28 +40,22 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
         CanvasManager.Instance.ShowHostInfo();
     }
 
-    private void Update()
-    {
-        //BACKDOOR LULs
-        btn_play.interactable = true;
-    }
-
     public void SelectFirstCharacter()
     {
         if (selectionSlots.Count > 0)
         {
-            currentSelectedCharacterId = selectionSlots[0].ID;
+            currentlySelectedCharacter = (Characters)selectionSlots[0].ID;
             selectionSlots[0].ShowAsSelected();
             TryEnableButtonPlay();
-            networkManager.SetPlayerPrefab(NekoCharacterPrefabs.Instance.GetPrefabWithId(currentSelectedCharacterId));
+            networkManager.CurrentlySelectedCharacter = currentlySelectedCharacter;
         }
     }
     public void OnCharacterSelected(int id)
     {
-        currentSelectedCharacterId = id;
+        int currentlySelectedCharacterID = id;
         foreach (CharacterSlot slot in selectionSlots)
         {
-            if (slot.ID == currentSelectedCharacterId)
+            if (slot.ID == currentlySelectedCharacterID)
             {
                 slot.ShowAsSelected();
                 TryEnableButtonPlay();
@@ -73,12 +65,13 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
                 slot.ShowAsNotSelected();
             }
         }
-        networkManager.SetPlayerPrefab(NekoCharacterPrefabs.Instance.GetPrefabWithId(currentSelectedCharacterId));
+        currentlySelectedCharacter = (Characters)currentlySelectedCharacterID;
+        networkManager.CurrentlySelectedCharacter = currentlySelectedCharacter;
     }
 
     public void TryEnableButtonPlay()
     {
-        if (if_nickname.text.Length > 0 && !string.IsNullOrEmpty(if_nickname.text) && !string.IsNullOrWhiteSpace(if_nickname.text) && currentSelectedCharacterId != -1)
+        if (if_nickname.text.Length > 0 && !string.IsNullOrEmpty(if_nickname.text) && !string.IsNullOrWhiteSpace(if_nickname.text) && currentlySelectedCharacter != Characters.NullCharacter)
         {
             btn_play.interactable = true;
         }
@@ -90,6 +83,7 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
     }
     public void OnBackButtonPressed()
     {
+        networkManager.shouldStartHost = false;
         CanvasManager.Instance.ShowPanelMainMenu();
         CanvasManager.Instance.HideCharSelection();
     }
