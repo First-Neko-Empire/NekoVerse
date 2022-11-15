@@ -3,14 +3,20 @@ using NBitcoin;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : NetworkBehaviourSingleton<GameManager>
 {
     [SerializeField]
     TMP_InputField if_nickname;
+    [SerializeField]
+    NekoVerseNetworkManager networkManager;
 
     private string playerNickname;
+
+    public Characters CurrentlySelectedCharacter = Characters.NullCharacter;
+
 
     public string PlayerNickname
     {
@@ -21,6 +27,7 @@ public class GameManager : NetworkBehaviourSingleton<GameManager>
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
+        //print(AssetDatabase.GUIDToAssetPath("0"));
     }
 
     private struct PlayerData
@@ -60,6 +67,10 @@ public class GameManager : NetworkBehaviourSingleton<GameManager>
 
     private void Update()
     {
+        if(if_nickname)
+        playerNickname = if_nickname.text;
+
+        print(PlayerNickname);
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (isServer)
@@ -71,7 +82,15 @@ public class GameManager : NetworkBehaviourSingleton<GameManager>
 
     public void OnNicknameInputFieldEndEdit()
     {
-        playerNickname = if_nickname.text;
     }
+
+    //[Command(requiresAuthority = false)]
+    //public void CmdSpawnSelectedCharacter(NetworkConnectionToClient sender = null)
+    //{
+    //    print("called");
+    //    GameObject characterInstance = networkManager.ObjInst(networkManager.GetSpawnPrefab((int)GameManager.Instance.CurrentlySelectedCharacter));
+    //    NetworkServer.Spawn(characterInstance, sender);
+    //}
+   
 
 }

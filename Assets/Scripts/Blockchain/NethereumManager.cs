@@ -310,37 +310,47 @@ public class NethereumManager : Singleton<NethereumManager>
 
     public async void UpdateMaticPrice()
     {
-        if (priceFeed == null) return;
-        var price = await GetLatestRoundData();
-        txt_maticPrice.text = "1 MATIC = " + FormatPrice(((float)price.Answer / (float)Math.Pow(10,(int)decimals)).ToString()) + "$";
-        var formatedBalance = FormatBalance();
-        txt_valuevalue.text = (float.Parse(formatedPrice) * float.Parse(formatedBalance)).ToString();
-
+        if (this)
+        {
+            if (priceFeed == null) return;
+            var price = await GetLatestRoundData();
+            txt_maticPrice.text = "1 MATIC = " + FormatPrice(((float)price.Answer / (float)Math.Pow(10, (int)decimals)).ToString()) + "$";
+            if (this)
+            {
+                var formatedBalance = FormatBalance();
+                txt_valuevalue.text = (float.Parse(formatedPrice) * float.Parse(formatedBalance)).ToString();
+            }
+        }
     }
 
     string FormatBalance()
     {
-        string userBalanceString = txt_valueBalance.text;
-        int numCount = 0;
-        StringBuilder sb = new StringBuilder("");
-        for (int i = 0; i < userBalanceString.Length; i++)
+        if (this)
         {
-            if (userBalanceString[i] != '.')
+            string userBalanceString = txt_valueBalance.text;
+
+            int numCount = 0;
+            StringBuilder sb = new StringBuilder("");
+            for (int i = 0; i < userBalanceString.Length; i++)
             {
-                numCount++;
-                sb.Append(userBalanceString[i]);
-            }
-            else
-            {
-                sb.Append(".");
-                for (int j = 2; j < 4; j++)
+                if (userBalanceString[i] != '.')
                 {
-                    sb.Append(userBalanceString[j]);
+                    numCount++;
+                    sb.Append(userBalanceString[i]);
                 }
-                return sb.ToString();
+                else
+                {
+                    sb.Append(".");
+                    for (int j = 2; j < 4; j++)
+                    {
+                        sb.Append(userBalanceString[j]);
+                    }
+                    return sb.ToString();
+                }
             }
+            return "ERROR";
         }
-        return "ERROR";
+        return "";
     }
     string FormatPrice(string price)
     {

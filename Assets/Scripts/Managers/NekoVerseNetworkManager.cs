@@ -8,6 +8,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public struct CreateCharacter : NetworkMessage
+{
+    public Characters id;
+}
+
+
 public class NekoVerseNetworkManager : NetworkManager
 {
     [SerializeField]
@@ -23,7 +29,6 @@ public class NekoVerseNetworkManager : NetworkManager
 
     public bool shouldStartHost = false;
 
-    public Characters CurrentlySelectedCharacter = Characters.NullCharacter;
 
     private new void Start()
     {
@@ -53,8 +58,8 @@ public class NekoVerseNetworkManager : NetworkManager
         Color oldServ = img_server.color;
         img_localHost.color = new Color(oldLH.r, oldLH.g, oldLH.b, 0.25f);
         img_server.color = new Color(oldServ.r, oldServ.g, oldServ.b, 1);
-        networkAddress = "";
-        GetComponent<kcp2k.KcpTransport>().Port = 0;
+        networkAddress = "45.86.183.168";
+        GetComponent<kcp2k.KcpTransport>().Port = 7777;
     }
 
     public void OnLocalHostButtonPressed()
@@ -67,10 +72,6 @@ public class NekoVerseNetworkManager : NetworkManager
         GetComponent<kcp2k.KcpTransport>().Port = 7777;
         btn_connect.interactable = true;
 
-    }
-    public void SetPlayerPrefab(GameObject prefab)
-    {
-        playerPrefab = prefab;
     }
     private string ValidateNickname(string nickname)
     {
@@ -92,6 +93,20 @@ public class NekoVerseNetworkManager : NetworkManager
     {
         base.OnStartServer();
         print("Server started. Adress: " + networkAddress + "  Port: " + GetComponent<kcp2k.KcpTransport>().Port);
+        NetworkServer.RegisterHandler<CreateCharacter>(OnCreateCharacter);
+    }
+    public override void OnClientConnect()
+    {
+        base.OnClientConnect();
+        CreateCharacter charCreationMsg = new CreateCharacter { id=GameManager.Instance.CurrentlySelectedCharacter };
+        NetworkClient.Send(charCreationMsg);
+    }
+    void OnCreateCharacter(NetworkConnectionToClient conn, CreateCharacter msg)
+    {
+        GameObject player = Instantiate(spawnPrefabs[(int)msg.id]);
+        player.name = $"{player.name} [connId={conn.connectionId}]";
+        NetworkServer.AddPlayerForConnection(conn, player);
+        GameObject.FindGameObjectWithTag("PlayerCanvasManager").GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
     }
     public override void OnStopServer()
     {
@@ -120,12 +135,6 @@ public class NekoVerseNetworkManager : NetworkManager
     public void OnPlayButtonPressed()
     {
             SaveUserNicknameToPrefs(GameManager.Instance.GetNickname());
-            //This shouldnt be here, all characters should already be ready
-            if (playerPrefab == null)
-            {
-                playerPrefab = defaultPlayerPrefab;
-            }
-
             if (shouldStartHost)
             {
                 shouldStartHost = false;
@@ -135,46 +144,61 @@ public class NekoVerseNetworkManager : NetworkManager
         StartClient();
     }
 
-    public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+
+    public GameObject GetSpawnPrefab(int index)
     {
-        if (CurrentlySelectedCharacter == Characters.NullCharacter)
-        {
-            Debug.LogError("No character is chosen.");
-            return;
-        }
-
-        GameObject pickedCharacterPrefab = spawnPrefabs[(int)CurrentlySelectedCharacter];
-
-        Transform startPos = GetStartPosition();
-        GameObject player;
-        if (startPos != null)
-        {
-            player = Instantiate(pickedCharacterPrefab, startPos.position, startPos.rotation);
-        }
-        else
-        {
-            Debug.LogError("Network starting position in the World is not found.");
-            return;
-        }
-
-        // instantiating a "Player" prefab gives it the name "Player(clone)"
-        // => appending the connectionId is WAY more useful for debugging!
-        player.name = $"{player.name} [connId={conn.connectionId}]";
-        NetworkServer.AddPlayerForConnection(conn, player);
+        return spawnPrefabs[index];
+    }
+    public Transform GetNextStartPos()
+    {
+        return GetStartPosition();
+    }
+    public GameObject ObjInst(GameObject obj)
+    {
+        return Instantiate(obj);
     }
 
-    public override void OnClientConnect()
-    {
-        if (!NetworkClient.ready)
-        {
-            NetworkClient.Ready();
-        }
-        Debug.Log($"Client connected on scene: {networkSceneName}");
 
-        if (autoCreatePlayer || networkSceneName == "Assets/Scenes/GameWorld.unity")
-        {
-            NetworkClient.AddPlayer();
-        }
-        GameManager.Instance.CmdClientConnectedToServer(NetworkClient.connection.connectionId, GameManager.Instance.PlayerNickname);
-    }
+    //public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+    //{
+    //    if (GameManager.Instance.CurrentlySelectedCharacter == Characters.NullCharacter)
+    //    {
+    //        Debug.LogError("No character is chosen.");
+    //        return;
+    //    }
+
+    //    GameObject pickedCharacterPrefab = spawnPrefabs[(int)GameManager.Instance.CurrentlySelectedCharacter];
+
+    //    Transform startPos = GetStartPosition();
+    //    GameObject player;
+    //    if (startPos != null)
+    //    {
+    //        player = Instantiate(pickedCharacterPrefab, startPos.position, startPos.rotation);
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("Network starting position in the World is not found.");
+    //        return;
+    //    }
+
+    //    // instantiating a "Player" prefab gives it the name "Player(clone)"
+    //    // => appending the connectionId is WAY more useful for debugging!
+    //    player.name = $"{player.name} [connId={conn.connectionId}]";
+    //    NetworkServer.AddPlayerForConnection(conn, player);
+    //}
+
+    //public override void OnClientConnect()
+    //{
+
+    //    if (!NetworkClient.ready)
+    //    {
+    //        NetworkClient.Ready();
+    //    }
+
+    //    if (autoCreatePlayer || networkSceneName == "Assets/Scenes/GameWorld.unity")
+    //    {
+    //        NetworkClient.AddPlayer();
+    //    }
+    //    //GameManager.Instance.CmdClientConnectedToServer(NetworkClient.connection.connectionId, GameManager.Instance.PlayerNickname);
+    //}
 }

@@ -1,3 +1,4 @@
+using Mirror;
 using Org.BouncyCastle.Asn1;
 using System.Collections;
 using System.Collections.Generic;
@@ -80,16 +81,21 @@ public class CanvasManager : Singleton<CanvasManager>
     {
         txt_NoCharsInventory.SetActive(false);
     }
+    [SerializeField]
+    NekoVerseNetworkManager networkManager;
     public void OnConnectButtonPressed()
     {
         CharacterSlotsManager.Instance.PopulateCharacterSlotsSelection();
         ShowCharSelection();
         HidePanelMainMenu();
         CharacterSelectionManager.Instance.SelectFirstCharacter();
+        string nickname = networkManager.LoadUserNicknameFromPrefs();
+        GameManager.Instance.SetNickname(nickname);
 
     }
     public async void ShowWrongPassword()
     {
+        if(txt_wrongPassword)
         if (txt_wrongPassword.activeSelf) return;
         txt_wrongPassword.SetActive(true);
         await Task.Delay(3000);

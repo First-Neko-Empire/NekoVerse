@@ -47,7 +47,7 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
             currentlySelectedCharacter = (Characters)selectionSlots[0].ID;
             selectionSlots[0].ShowAsSelected();
             TryEnableButtonPlay();
-            networkManager.CurrentlySelectedCharacter = currentlySelectedCharacter;
+            GameManager.Instance.CurrentlySelectedCharacter = currentlySelectedCharacter;
         }
     }
     public void OnCharacterSelected(int id)
@@ -66,7 +66,7 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
             }
         }
         currentlySelectedCharacter = (Characters)currentlySelectedCharacterID;
-        networkManager.CurrentlySelectedCharacter = currentlySelectedCharacter;
+        GameManager.Instance.CurrentlySelectedCharacter = currentlySelectedCharacter;
     }
 
     public void TryEnableButtonPlay()

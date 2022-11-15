@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Mirror;
+using UnityEngine.InputSystem;
 
 public class ChatUI : NetworkBehaviour
 {
@@ -14,20 +15,21 @@ public class ChatUI : NetworkBehaviour
     [SerializeField]
     private TMP_InputField chatMessage;
 
-    public static string localPlayerName;
+    private PlayerInput localPlayerInput;
+    private static string localPlayerName;
 
     public override void OnStartClient()
     {
-        //localPlayerName = connectionToClient.connectionId.ToString();
-        localPlayerName = "123";
+        localPlayerInput = NetworkClient.localPlayer.gameObject.GetComponent<PlayerInput>();
+        localPlayerName = GameManager.Instance.PlayerNickname;
         chatHistory.text = string.Empty;
     }
 
-    [Command(requiresAuthority = false)]
-    private void CmdSend(string message)
+    [Command]
+    private void CmdSend(string senderName, string message)
     {
         if (!string.IsNullOrWhiteSpace(message))
-            RpcReceive("12", message.Trim());
+            RpcReceive(senderName, message);
     }
 
     private void RpcReceive(string senderName, string message)
@@ -38,7 +40,7 @@ public class ChatUI : NetworkBehaviour
         StartCoroutine(AppendAndScroll(prettyMessage));
     }
 
-    IEnumerator AppendAndScroll(string message)
+    private IEnumerator AppendAndScroll(string message)
     {
         chatHistory.text += message + "\n";
 
@@ -48,6 +50,16 @@ public class ChatUI : NetworkBehaviour
 
         // slam the scrollbar down
         scrollbar.value = 0;
+    }
+
+    public void OnSelect(string input)
+    {
+        localPlayerInput.actions.Disable();
+    }
+
+    public void OnDeselect(string input)
+    {
+        localPlayerInput.actions.Enable();
     }
 
     public void OnEndEdit(string input)
@@ -62,9 +74,17 @@ public class ChatUI : NetworkBehaviour
     {
         if (!string.IsNullOrWhiteSpace(chatMessage.text))
         {
-            CmdSend(chatMessage.text.Trim());
+            CmdSend(localPlayerName, chatMessage.text.Trim());
             chatMessage.text = string.Empty;
             chatMessage.ActivateInputField();
+            StartCoroutine(ClearNewLineArtifact());
         }
     }
+
+    private IEnumerator ClearNewLineArtifact()
+    {
+        yield return new WaitForEndOfFrame();
+
+        chatMessage.text = string.Empty;
+    }    
 }
