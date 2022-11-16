@@ -348,6 +348,7 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         inventory.SetActive(false);
         fortune.SetActive(true);
         options.SetActive(false);
+        CharacterRollProcessor.Instance.HideCharRecieved();
     }
     public void ShowOptions()
     {

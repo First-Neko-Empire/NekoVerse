@@ -11,6 +11,8 @@ public class CharacterRollProcessor : Singleton<CharacterRollProcessor>
     private GameObject txt_processing;
     [SerializeField]
     private GameObject img_processing;
+    [SerializeField]
+    private GameObject txt_charRecieved;
 
     bool stopBalanceCheck = false;
     bool informAboutNewChar = false;
@@ -37,6 +39,18 @@ public class CharacterRollProcessor : Singleton<CharacterRollProcessor>
         }
 
     }
+
+    public void ShowCharRecieved()
+    {
+        txt_charRecieved.SetActive(true);
+    }
+
+
+    public void HideCharRecieved()
+    {
+        txt_charRecieved.SetActive(false);
+    }
+
 
     public void HideProccessingTransaction()
     {
@@ -76,7 +90,7 @@ public class CharacterRollProcessor : Singleton<CharacterRollProcessor>
             }
             else
             {
-                print("GOT NEW CHARACTER");
+                ShowCharRecieved();
                 HideProccessingTransaction();
                 CharacterSlotsManager.Instance.UpdateWithNewBalance();
                 StopCoroutine(balanceChecker);

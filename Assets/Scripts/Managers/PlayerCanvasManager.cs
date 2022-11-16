@@ -17,7 +17,7 @@ public class PlayerCanvasManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftAlt))
+        if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             StartCoroutine(HideCursor());
         }
