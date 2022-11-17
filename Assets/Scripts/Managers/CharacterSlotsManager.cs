@@ -1,5 +1,6 @@
 using Nethereum.Contracts.Standards.ERC1155.ContractDefinition;
 using Nethereum.RPC.Eth.Filters;
+using Org.BouncyCastle.Asn1;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ public class CharacterSlotsManager : Singleton<CharacterSlotsManager>
     List<GameObject> characterSlotRowsInventory = new List<GameObject>();
 
 
+
     public void ClearAllInventory()
     {
         foreach (var key in characterSlotRowsInventory)
@@ -41,6 +43,7 @@ public class CharacterSlotsManager : Singleton<CharacterSlotsManager>
         characterSlotRowsInventory.Clear();
         characterSlotsInventory.Clear();
         ClearAllSelection();
+        CharacterSelectionManager.Instance.Clear();
     }
     public  void UpdateWithNewBalance()
     {
@@ -202,6 +205,7 @@ public class CharacterSlotsManager : Singleton<CharacterSlotsManager>
         CharacterSelectionManager.Instance.OnSelectionSlotCreated(slot.GetComponent<CharacterSlot>());
         return slot;
     }
+
 
 
     public void CreateCharacterSlotsForUserForSelection(string address, NethereumManager.Uint256Array fullBalanceArgument,Action onComplete=null)

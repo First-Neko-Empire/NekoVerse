@@ -90,6 +90,7 @@ public class ChatUI : NetworkBehaviour
             CmdSend(localPlayerName, chatMessage.text.Trim());
             chatMessage.text = string.Empty;
             chatMessage.ActivateInputField();
+            gameObject.SetActive(true);
             StartCoroutine(ClearNewLineArtifact());
         }
     }

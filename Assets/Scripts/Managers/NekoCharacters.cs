@@ -5,10 +5,10 @@ using UnityEngine;
 
 public enum Characters
 {
-    Kuro, Urania, Asami, Darkiel, Neva, Slava, Caio, Eirina, Gweyir, Anna,
+    Darkiel,Urania, Neva, Slava, Caio, Eirina, Gweyir, Anna,
     Elissa, Eileen, Aryna, Rokorid, Molly, Haiku, Sara, Rurdeth,
     Vulen, Nina, Edea, Thessalia, Viessa, Yuna, Eorvyn, Elaiza,
-    Sophie, Ruth, Darka, Ramiel, NullCharacter
+    Sophie, Ruth, Kuro, Darka, Ramiel, NullCharacter
 }
 
 public static class NekoCharacterNames 
@@ -23,34 +23,34 @@ public static class NekoCharacterNames
         if (!isInitialized)
         {
             isInitialized = true;
-            charactersNames.Add(0,  "Kuro");
+            charactersNames.Add(0,  "Darkiel");
             charactersNames.Add(1,  "Urania");
-            charactersNames.Add(2,  "Asami");
-            charactersNames.Add(3,  "Darkiel");
-            charactersNames.Add(4,  "Neva");
-            charactersNames.Add(5,  "Slava");
-            charactersNames.Add(6,  "Caio");
-            charactersNames.Add(7, "Eirina");
-            charactersNames.Add(8,  "Gweyir");
-            charactersNames.Add(9,  "Anna");
-            charactersNames.Add(10, "Elissa");
-            charactersNames.Add(11, "Eileen");
-            charactersNames.Add(12, "Aryna");
-            charactersNames.Add(13, "Rokorid");
-            charactersNames.Add(14, "Molly");
-            charactersNames.Add(15, "Haiku");
-            charactersNames.Add(16, "Sara");
-            charactersNames.Add(17, "Rurdeth");
-            charactersNames.Add(18, "Vulen");
-            charactersNames.Add(19, "Nina");
-            charactersNames.Add(20, "Edea");
-            charactersNames.Add(21, "Thessalia");
-            charactersNames.Add(22, "Viessa");
-            charactersNames.Add(23, "Yuna");
-            charactersNames.Add(24, "Eorvyn");
-            charactersNames.Add(25, "Elaiza");
-            charactersNames.Add(26, "Sophie");
-            charactersNames.Add(27, "Ruth");
+            charactersNames.Add(2,  "Neva");
+            charactersNames.Add(3,  "Slava");
+            charactersNames.Add(4,  "Asami");
+            charactersNames.Add(5,  "Caio");
+            charactersNames.Add(6, "Eirina");
+            charactersNames.Add(7, "Gweyir");
+            charactersNames.Add(8, "Anna");
+            charactersNames.Add(9, "Elissa");
+            charactersNames.Add(10, "Eileen");
+            charactersNames.Add(11, "Aryna");
+            charactersNames.Add(12, "Rokorid");
+            charactersNames.Add(13, "Molly");
+            charactersNames.Add(14, "Haiku");
+            charactersNames.Add(15, "Sara");
+            charactersNames.Add(16, "Rurdeth");
+            charactersNames.Add(17, "Vulen");
+            charactersNames.Add(18, "Nina");
+            charactersNames.Add(19, "Edea");
+            charactersNames.Add(20, "Thessalia");
+            charactersNames.Add(21, "Viessa");
+            charactersNames.Add(22, "Yuna");
+            charactersNames.Add(23, "Eorvyn");
+            charactersNames.Add(24, "Elaiza");
+            charactersNames.Add(25, "Sophie");
+            charactersNames.Add(26, "Ruth");
+            charactersNames.Add(27, "Kuro");
             charactersNames.Add(28, "Darka");
             charactersNames.Add(29, "Ramiel");
         }

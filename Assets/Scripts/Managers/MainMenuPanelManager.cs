@@ -143,6 +143,7 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
 
     private void Start()
     {
+        currentRoll = CURRENT_SELECTED_ROLL.CHARACTER;
     }
     public void OnRejectButtonPressed()
     {
@@ -191,30 +192,46 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
 
     [SerializeField]
     GameObject whitness;
+    [SerializeField]
+    GameObject txt_nomatic;
+
+    public void HideNoMatic()
+    {
+        txt_nomatic.SetActive(false);
+    }
     public async void OnRollButtonPressed()
     {
+        HideNoMatic();
+        BannerSetter.Instance.HideBkgnd();
         whitness.SetActive(true);
-        switch (currentRoll)
+        try
         {
-            case CURRENT_SELECTED_ROLL.NONE:
-                print("No roll selected.");
-                break;
-            case CURRENT_SELECTED_ROLL.HEAVENS:
-                break;
-            case CURRENT_SELECTED_ROLL.CHARACTER:
-                var gas1 = (await NethereumManager.Instance.requestRandomCharacterEstimateGas());
-                populateTx("Character", 10000000000000000.ToString(), gas1.ToSafeString(), (1000000000000000 + gas1.ToLong()).ToSafeString()); ;
-                break;
-            case CURRENT_SELECTED_ROLL.NEWBEE:
-                var gas2 = (await NethereumManager.Instance.OpenStartedKitEstimateGas());
-                populateTx("Newbee", "0", gas2.ToString(), gas2.ToString());
-                break;
-            case CURRENT_SELECTED_ROLL.ITEMS:
-                break; 
-            case CURRENT_SELECTED_ROLL.WEAPONS:
-                break;
-            default:
-                break;
+            switch (currentRoll)
+            {
+                case CURRENT_SELECTED_ROLL.NONE:
+                    print("No roll selected.");
+                    break;
+                case CURRENT_SELECTED_ROLL.HEAVENS:
+                    break;
+                case CURRENT_SELECTED_ROLL.CHARACTER:
+                    var gas1 = (await NethereumManager.Instance.requestRandomCharacterEstimateGas());
+                    populateTx("Character", 10000000000000000.ToString(), gas1.ToSafeString(), (1000000000000000 + gas1.ToLong()).ToSafeString()); ;
+                    break;
+                case CURRENT_SELECTED_ROLL.NEWBEE:
+                    var gas2 = (await NethereumManager.Instance.OpenStartedKitEstimateGas());
+                    populateTx("Newbee", "0", gas2.ToString(), gas2.ToString());
+                    break;
+                case CURRENT_SELECTED_ROLL.ITEMS:
+                    break;
+                case CURRENT_SELECTED_ROLL.WEAPONS:
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            txt_nomatic.SetActive(true);
         }
     }
     public void OnCharacterRollButtonPressed()
@@ -225,6 +242,8 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         img_itemsRoll.color = unclickedColor;
         img_weaponRoll.color = unclickedColor;
         currentRoll = CURRENT_SELECTED_ROLL.CHARACTER;
+        BannerSetter.Instance.ShowBkgnd();
+        BannerSetter.Instance.SetRandomBanner();
     }
     public void OnNewbeeRollButtonPressed()
     {
@@ -234,6 +253,8 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         img_itemsRoll.color = unclickedColor;
         img_weaponRoll.color = unclickedColor;
         currentRoll = CURRENT_SELECTED_ROLL.NEWBEE;
+        BannerSetter.Instance.ShowBkgnd();
+        BannerSetter.Instance.SetNewbie();
     }
     public void OnHeavensRollButtonPressed()
     {
@@ -352,6 +373,7 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         options.SetActive(false);
         CharacterRollProcessor.Instance.HideCharRecieved();
         whitness.SetActive(false);
+        HideNoMatic();
     }
     public void ShowOptions()
     {

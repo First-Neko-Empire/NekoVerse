@@ -29,6 +29,11 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
         btn_play.interactable = false;
     }
 
+    public void Clear()
+    {
+        selectionSlots.Clear();
+    }
+
     public void OnChangeServerInfoButtonPressed()
     {
         serverInfoChage.SetActive(true);

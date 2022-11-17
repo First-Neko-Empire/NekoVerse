@@ -124,7 +124,6 @@ public class NekoVerseNetworkManager : NetworkManager
         GameObject player = Instantiate(spawnPrefabs[(int)msg.id]);
         player.name = $"{player.name} [connId={conn.connectionId}]";
         NetworkServer.AddPlayerForConnection(conn, player);
-        //GameObject.FindGameObjectWithTag("PlayerCanvasManager").GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
     }
     public override void OnStopServer()
     {
