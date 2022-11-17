@@ -12,7 +12,7 @@ public class PlayerCanvasManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.LeftAlt))
+        if (Input.GetKey(KeyCode.LeftControl))
         {
             Cursor.lockState = CursorLockMode.None;
         }

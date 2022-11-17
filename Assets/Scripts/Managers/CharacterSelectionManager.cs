@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -31,13 +32,31 @@ public class CharacterSelectionManager : Singleton<CharacterSelectionManager>
     public void OnChangeServerInfoButtonPressed()
     {
         serverInfoChage.SetActive(true);
+
+    }
+    public void ShowServerInfoChange()
+    {
+        serverInfoChage.SetActive(true);
+
+    }
+    public void HideServerInfoChange()
+    {
+        serverInfoChage.SetActive(false);
+
     }
 
     public void OnGoButtonPressed()
     {
-        serverInfoChage.SetActive(false);
-        networkManager.OnServerInfoChanged(if_address.text, ushort.Parse(if_port.text));
-        CanvasManager.Instance.ShowHostInfo();
+        try
+        {
+            serverInfoChage.SetActive(false);
+            networkManager.OnServerInfoChanged(if_address.text, ushort.Parse(if_port.text));
+            CanvasManager.Instance.ShowHostInfo();
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 
     public void SelectFirstCharacter()

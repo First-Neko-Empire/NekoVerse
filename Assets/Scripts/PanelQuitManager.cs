@@ -11,7 +11,7 @@ public class PanelQuitManager : Singleton<PanelQuitManager>
 
     public void ShowPanelQuit()
     {
-        panel_Quit.SetActive(true);
+        panel_Quit.SetActive(!panel_Quit.activeSelf);
     }
     public void HidePanelQuit()
     {

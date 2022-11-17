@@ -30,9 +30,4 @@ public class PasswordCreationManager : Singleton<PasswordCreationManager>
 		userPassword = if_enterPassword.text;
 	}
 
-	private void Update()
-	{
-		//DISCLAIMER: This is only while testing. And it should not be in production.
-		btn_Done.interactable = true;
-	}
 }

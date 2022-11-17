@@ -128,12 +128,14 @@ public class CharacterSlotsManager : Singleton<CharacterSlotsManager>
     }
     [SerializeField]
     Sprite defaultIconForUnfinishedCharacters;
-
+    [SerializeField]
+    Button btn_server;
     public void EnableButtons()
     {
         btn_inventory.interactable = true;
         btn_connect.interactable = true;
         btn_hostAndPlay.interactable = true;
+        btn_server.interactable = true;
     }
     public void PopulateCharacterSlotsInventory()
     {
@@ -254,6 +256,7 @@ public class CharacterSlotsManager : Singleton<CharacterSlotsManager>
     public void PopulateCharacterSlotsSelection()
     {
         int nextSlotIndex = 0;
+        if (fullBalance == null) return;
         for (int i = 0; i < fullBalance.Values.Count; i++)
         {
             BigInteger balance = fullBalance.Values[i];

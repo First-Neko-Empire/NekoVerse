@@ -13,6 +13,8 @@ public class ApplicationManager : Singleton<ApplicationManager>
     TextMeshProUGUI txt;
     [SerializeField]
     GameObject gameManager;
+    
+
 
     private bool hasUserLogedIn;
 
@@ -38,24 +40,12 @@ public class ApplicationManager : Singleton<ApplicationManager>
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            img.sprite = NekoCharacterNames.LoadFullSpriteForId(2);
-        }
         if(!HasUserLogedIn)
         {
             if(Input.GetKeyDown(KeyCode.Return))
             {
                 CanvasManager.Instance.OnGoButtonPressed();
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            txt.gameObject.SetActive(!txt.gameObject.activeSelf);
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //QuitGame();
         }
     }
 

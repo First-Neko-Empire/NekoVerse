@@ -83,14 +83,20 @@ public class CanvasManager : Singleton<CanvasManager>
     }
     [SerializeField]
     NekoVerseNetworkManager networkManager;
-    public void OnConnectButtonPressed()
+    public void OnConnectButtonPressed(bool changeToServer)
     {
         CharacterSlotsManager.Instance.PopulateCharacterSlotsSelection();
         ShowCharSelection();
+        HideYouAreHost();
         HidePanelMainMenu();
         CharacterSelectionManager.Instance.SelectFirstCharacter();
         string nickname = networkManager.LoadUserNicknameFromPrefs();
         GameManager.Instance.SetNickname(nickname);
+        if(changeToServer)
+        networkManager.RedirectToServer();
+        ShowHostInfo();
+        networkManager.ShowButtonChange();
+        //HideHostInfo();
 
     }
     public async void ShowWrongPassword()

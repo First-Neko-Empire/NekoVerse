@@ -57,27 +57,12 @@ public class GameManager : NetworkBehaviourSingleton<GameManager>
     {
         return if_nickname.text;
     }
-    private void printttt()
-    {
-        foreach (KeyValuePair<int,PlayerData> el in clientData)
-        {
-            print(el.Key + " " + el.Value.Nickname);
-}
-    }
+ 
 
     private void Update()
     {
         if(if_nickname)
         playerNickname = if_nickname.text;
-
-        print(PlayerNickname);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isServer)
-            {
-                printttt();
-            }
-        }
     }
 
     public void OnNicknameInputFieldEndEdit()

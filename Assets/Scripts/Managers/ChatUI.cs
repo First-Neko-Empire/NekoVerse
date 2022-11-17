@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using Mirror;
 using UnityEngine.InputSystem;
+using System;
 
 public class ChatUI : NetworkBehaviour
 {
@@ -20,18 +21,29 @@ public class ChatUI : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        localPlayerInput = NetworkClient.localPlayer.gameObject.GetComponent<PlayerInput>();
-        localPlayerName = GameManager.Instance.PlayerNickname;
-        chatHistory.text = string.Empty;
+        StartCoroutine(I_Wait(() =>
+        {
+            localPlayerInput = NetworkClient.localPlayer.gameObject.GetComponent<PlayerInput>();
+            localPlayerName = GameManager.Instance.PlayerNickname;
+            chatHistory.text = string.Empty;
+        }));
     }
 
-    [Command]
+    IEnumerator I_Wait(Action todo)
+    {
+        yield return new WaitForSeconds(2);
+        todo.Invoke();
+    }
+
+    [Command (requiresAuthority = false)]
     private void CmdSend(string senderName, string message)
     {
+        Debug.Log(hasAuthority);
         if (!string.IsNullOrWhiteSpace(message))
             RpcReceive(senderName, message);
     }
 
+    [ClientRpc]
     private void RpcReceive(string senderName, string message)
     {
         string prettyMessage = senderName == localPlayerName ?
@@ -72,6 +84,7 @@ public class ChatUI : NetworkBehaviour
 
     private void SendMessageToChat()
     {
+        Debug.Log(hasAuthority);
         if (!string.IsNullOrWhiteSpace(chatMessage.text))
         {
             CmdSend(localPlayerName, chatMessage.text.Trim());

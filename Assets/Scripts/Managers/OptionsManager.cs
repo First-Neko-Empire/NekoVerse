@@ -14,6 +14,8 @@ public class OptionsManager : Singleton<OptionsManager>
     Slider soundEffectsVolumeSlider;
     [SerializeField]
     TMP_InputField if_endpoint;
+    [SerializeField]
+    AudioSource theme;
 
     private float globalVolume;
     private float soundEffectsVolume;
@@ -56,6 +58,7 @@ public class OptionsManager : Singleton<OptionsManager>
     public void OnGlobalVolumeSliderValueChanged()
     {
         globalVolume = globalVolumeSlider.value;
+        theme.volume = GlobalVolume;
         SaveGlobalVolumeToPrefs();
     }
 

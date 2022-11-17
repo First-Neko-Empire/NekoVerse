@@ -36,21 +36,38 @@ public class NekoVerseNetworkManager : NetworkManager
 
     }
 
-    public void HostAndPlay()
+    public void ShowButtonChange()
     {
         btn_change.SetActive(true);
+    }
+    public void HideButtonChanage()
+    {
+        btn_change.SetActive(false);
 
+    }
 
+    public void HostAndPlay()
+    {
         shouldStartHost = true;
-        CanvasManager.Instance.OnConnectButtonPressed();
-
+        RedirectToHost();
         CanvasManager.Instance.ShowYouAreHost();
-
+        CanvasManager.Instance.OnConnectButtonPressed(false);
         CanvasManager.Instance.ShowHostInfo();
 
         string nickname = LoadUserNicknameFromPrefs();
         GameManager.Instance.SetNickname(nickname);
+        HideButtonChanage();
 
+    }
+    public void RedirectToHost()
+    {
+        networkAddress = "127.0.0.1";
+        GetComponent<kcp2k.KcpTransport>().Port = 7777;
+    }
+    public void RedirectToServer()
+    {
+        networkAddress = "213.189.221.11";
+        GetComponent<kcp2k.KcpTransport>().Port = 7777;
     }
     public void OnServerOneButtonPressed()
     {
@@ -58,8 +75,9 @@ public class NekoVerseNetworkManager : NetworkManager
         Color oldServ = img_server.color;
         img_localHost.color = new Color(oldLH.r, oldLH.g, oldLH.b, 0.25f);
         img_server.color = new Color(oldServ.r, oldServ.g, oldServ.b, 1);
-        networkAddress = "45.86.183.168";
+        networkAddress = "213.189.221.11";
         GetComponent<kcp2k.KcpTransport>().Port = 7777;
+        CanvasManager.Instance.OnConnectButtonPressed(true);
     }
 
     public void OnLocalHostButtonPressed()
@@ -106,7 +124,7 @@ public class NekoVerseNetworkManager : NetworkManager
         GameObject player = Instantiate(spawnPrefabs[(int)msg.id]);
         player.name = $"{player.name} [connId={conn.connectionId}]";
         NetworkServer.AddPlayerForConnection(conn, player);
-        GameObject.FindGameObjectWithTag("PlayerCanvasManager").GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
+        //GameObject.FindGameObjectWithTag("PlayerCanvasManager").GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
     }
     public override void OnStopServer()
     {
@@ -116,7 +134,7 @@ public class NekoVerseNetworkManager : NetworkManager
 
     public void OnServerInfoChanged(string address, ushort port)
     {
-        networkAddress = address;   
+        networkAddress = address;
         GetComponent<kcp2k.KcpTransport>().Port = port;
     }
 

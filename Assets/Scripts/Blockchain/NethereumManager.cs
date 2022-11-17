@@ -318,8 +318,14 @@ public class NethereumManager : Singleton<NethereumManager>
             if (this)
             {
                 var formatedBalance = FormatBalance();
-                txt_valuevalue.text = (float.Parse(formatedPrice) * float.Parse(formatedBalance)).ToString();
-            }
+                try {
+                    txt_valuevalue.text = (float.Parse(formatedPrice) * float.Parse(formatedBalance)).ToString();
+                }
+                catch(Exception e)
+                {
+
+                }
+                }
         }
     }
 
@@ -331,6 +337,7 @@ public class NethereumManager : Singleton<NethereumManager>
 
             int numCount = 0;
             StringBuilder sb = new StringBuilder("");
+            if (userBalanceString == null) return "";
             for (int i = 0; i < userBalanceString.Length; i++)
             {
                 if (userBalanceString[i] != '.')

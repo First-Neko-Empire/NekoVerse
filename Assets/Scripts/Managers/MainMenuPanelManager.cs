@@ -189,9 +189,11 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         nextTimeYouLogin.SetActive(false);
     }
 
-
+    [SerializeField]
+    GameObject whitness;
     public async void OnRollButtonPressed()
     {
+        whitness.SetActive(true);
         switch (currentRoll)
         {
             case CURRENT_SELECTED_ROLL.NONE:
@@ -349,6 +351,7 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         fortune.SetActive(true);
         options.SetActive(false);
         CharacterRollProcessor.Instance.HideCharRecieved();
+        whitness.SetActive(false);
     }
     public void ShowOptions()
     {
