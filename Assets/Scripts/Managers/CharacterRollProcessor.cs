@@ -90,6 +90,7 @@ public class CharacterRollProcessor : Singleton<CharacterRollProcessor>
             }
             else
             {
+                MainMenuPanelManager.Instance.IsRolling = false;
                 ShowCharRecieved();
                 HideProccessingTransaction();
                 CharacterSlotsManager.Instance.UpdateWithNewBalance();

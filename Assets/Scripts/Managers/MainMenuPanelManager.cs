@@ -118,26 +118,34 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
         btn_reject.SetActive(false);
         txt_totalCost.text = "";
         txt_info.text = "";
-        switch (currentRoll)
+        try
         {
-            case CURRENT_SELECTED_ROLL.NONE:
-                break;
-            case CURRENT_SELECTED_ROLL.HEAVENS:
-                break;
-            case CURRENT_SELECTED_ROLL.CHARACTER:
-                NethereumManager.Instance.requestRandomCharacter();
-                CharacterRollProcessor.Instance.ShowProcessingTransaction();
-                break;
-            case CURRENT_SELECTED_ROLL.NEWBEE:
-                NethereumManager.Instance.OpenStarterKit();
-                CharacterRollProcessor.Instance.ShowProcessingTransaction();
-                break;
-            case CURRENT_SELECTED_ROLL.ITEMS:
-                break;
-            case CURRENT_SELECTED_ROLL.WEAPONS:
-                break;
-            default:
-                break;
+            switch (currentRoll)
+            {
+                case CURRENT_SELECTED_ROLL.NONE:
+                    break;
+                case CURRENT_SELECTED_ROLL.HEAVENS:
+                    break;
+                case CURRENT_SELECTED_ROLL.CHARACTER:
+                    NethereumManager.Instance.requestRandomCharacter();
+                    CharacterRollProcessor.Instance.ShowProcessingTransaction();
+                    break;
+                case CURRENT_SELECTED_ROLL.NEWBEE:
+                    NethereumManager.Instance.OpenStarterKit();
+                    CharacterRollProcessor.Instance.ShowProcessingTransaction();
+                    break;
+                case CURRENT_SELECTED_ROLL.ITEMS:
+                    break;
+                case CURRENT_SELECTED_ROLL.WEAPONS:
+                    break;
+                default:
+                    break;
+            }
+            IsRolling = true;
+        }
+        catch (Exception e)
+        {
+            txt_nomatic.SetActive(true);
         }
     }
 
@@ -234,27 +242,37 @@ public class MainMenuPanelManager : Singleton<MainMenuPanelManager>
             txt_nomatic.SetActive(true);
         }
     }
+
+    public bool IsRolling = false;
     public void OnCharacterRollButtonPressed()
     {
-        img_charRoll.color = clickedColor;
-        img_heavensRoll.color = unclickedColor;
-        img_NewbeeRoll.color = unclickedColor;
-        img_itemsRoll.color = unclickedColor;
-        img_weaponRoll.color = unclickedColor;
-        currentRoll = CURRENT_SELECTED_ROLL.CHARACTER;
-        BannerSetter.Instance.ShowBkgnd();
-        BannerSetter.Instance.SetRandomBanner();
+        if (IsRolling == false)
+        {
+            img_charRoll.color = clickedColor;
+            img_heavensRoll.color = unclickedColor;
+            img_NewbeeRoll.color = unclickedColor;
+            img_itemsRoll.color = unclickedColor;
+            img_weaponRoll.color = unclickedColor;
+            currentRoll = CURRENT_SELECTED_ROLL.CHARACTER;
+            HideNoMatic();
+            BannerSetter.Instance.ShowBkgnd();
+            BannerSetter.Instance.SetRandomBanner();
+        }
     }
     public void OnNewbeeRollButtonPressed()
     {
-        img_NewbeeRoll.color = clickedColor;
-        img_heavensRoll.color = unclickedColor;
-        img_charRoll.color = unclickedColor;
-        img_itemsRoll.color = unclickedColor;
-        img_weaponRoll.color = unclickedColor;
-        currentRoll = CURRENT_SELECTED_ROLL.NEWBEE;
-        BannerSetter.Instance.ShowBkgnd();
-        BannerSetter.Instance.SetNewbie();
+        if (IsRolling==false)
+        {
+            img_NewbeeRoll.color = clickedColor;
+            img_heavensRoll.color = unclickedColor;
+            img_charRoll.color = unclickedColor;
+            img_itemsRoll.color = unclickedColor;
+            img_weaponRoll.color = unclickedColor;
+            currentRoll = CURRENT_SELECTED_ROLL.NEWBEE;
+            HideNoMatic();
+            BannerSetter.Instance.ShowBkgnd();
+            BannerSetter.Instance.SetNewbie();
+        }
     }
     public void OnHeavensRollButtonPressed()
     {

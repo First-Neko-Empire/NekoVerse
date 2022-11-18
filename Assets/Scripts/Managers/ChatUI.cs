@@ -85,7 +85,7 @@ public class ChatUI : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.H) && chatMessage.text.Length == 0)
         {
             chatPanel.SetActive(!chatPanel.activeInHierarchy);
         }
@@ -109,6 +109,12 @@ public class ChatUI : NetworkBehaviour
         if (!string.IsNullOrWhiteSpace(chatMessage.text))
         {
             CmdSend(localPlayerName, chatMessage.text.Trim());
+            chatMessage.text = string.Empty;
+            chatMessage.DeactivateInputField();
+            StartCoroutine(ClearNewLineArtifact());
+        }
+        else
+        {
             chatMessage.text = string.Empty;
             chatMessage.DeactivateInputField();
             StartCoroutine(ClearNewLineArtifact());
