@@ -26,6 +26,7 @@ public class ApplicationManager : Singleton<ApplicationManager>
 
     private new void Awake()
     {
+        print("pls");
         gameManager.SetActive(true);
         base.Awake();
         NekoCharacterNames.Initialize();
@@ -35,6 +36,7 @@ public class ApplicationManager : Singleton<ApplicationManager>
         if (PlayerPrefs.HasKey("ENCRYPTED_PRIVATE_KEY"))
         {
             CanvasManager.Instance.HidePanelCreateImportWallet();
+
             CanvasManager.Instance.ShowPanelLogin();
         }
     }
