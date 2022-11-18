@@ -10,6 +10,8 @@ public class ChatUI : NetworkBehaviour
 {
     [Header("UI Bindings")]
     [SerializeField]
+    private GameObject chatPanel;
+    [SerializeField]
     private TextMeshProUGUI chatHistory;
     [SerializeField]
     private Scrollbar scrollbar;
@@ -38,7 +40,6 @@ public class ChatUI : NetworkBehaviour
     [Command (requiresAuthority = false)]
     private void CmdSend(string senderName, string message)
     {
-        Debug.Log(hasAuthority);
         if (!string.IsNullOrWhiteSpace(message))
             RpcReceive(senderName, message);
     }
@@ -78,19 +79,38 @@ public class ChatUI : NetworkBehaviour
     {
         // opportunity for validation
 
+        //if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        //    SendMessageToChat();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            chatPanel.SetActive(!chatPanel.activeInHierarchy);
+        }
+
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-            SendMessageToChat();
+        {
+            if (chatMessage.text.Length > 0)
+            {
+                SendMessageToChat();
+            }
+            else
+            {
+                chatMessage.ActivateInputField();
+                localPlayerInput.actions.Disable();
+            }
+        }
     }
 
     private void SendMessageToChat()
     {
-        Debug.Log(hasAuthority);
         if (!string.IsNullOrWhiteSpace(chatMessage.text))
         {
             CmdSend(localPlayerName, chatMessage.text.Trim());
             chatMessage.text = string.Empty;
-            chatMessage.ActivateInputField();
-            gameObject.SetActive(true);
+            chatMessage.DeactivateInputField();
             StartCoroutine(ClearNewLineArtifact());
         }
     }
@@ -99,6 +119,7 @@ public class ChatUI : NetworkBehaviour
     {
         yield return new WaitForEndOfFrame();
 
+        localPlayerInput.actions.Enable();
         chatMessage.text = string.Empty;
     }    
 }

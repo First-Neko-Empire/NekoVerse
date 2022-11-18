@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum Characters
 {
-    Darkiel,Urania, Neva, Slava, Caio, Eirina, Gweyir, Anna,
+    Darkiel,Urania, Neva, Slava,Asami, Caio, Eirina, Gweyir, Anna,
     Elissa, Eileen, Aryna, Rokorid, Molly, Haiku, Sara, Rurdeth,
     Vulen, Nina, Edea, Thessalia, Viessa, Yuna, Eorvyn, Elaiza,
     Sophie, Ruth, Kuro, Darka, Ramiel, NullCharacter
