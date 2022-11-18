@@ -7,6 +7,9 @@ public class ThemeDisabler : MonoBehaviour
 {
     [SerializeField]
     AudioSource theme;
+    [SerializeField]
+    AudioSource loop;
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded+= OnSceneLoaded;
@@ -26,5 +29,6 @@ public class ThemeDisabler : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             theme.volume -= 0.05f;
         }
+        loop.Play();
     }
 }
